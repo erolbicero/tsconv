@@ -20,8 +20,6 @@
 #'
 #' @export
 
-#' @import RMTstat
-#' @import fGarch
 #' @importFrom zoo index
 
 # quantmod::getSymbols
