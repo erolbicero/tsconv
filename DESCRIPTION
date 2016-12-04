@@ -1,0 +1,21 @@
+Package: tsc
+Title: Time Series Convenience
+Version: 1.0
+Date: 2016-12-03
+Author: Erol Biceroglu
+Maintainer: Erol Biceroglu <erol.biceroglu@alumni.utoronto.ca>
+Description: Convenience functions for xts, PerformanceAnalytics, quantmod, and
+    other packages
+Depends:
+    xts
+Imports:
+    zoo,
+    xts,
+    PerformanceAnalytics,
+    quantmod,
+    timeDate,
+    lubridate,
+    stringr
+Suggests:
+License: GPL-2
+RoxygenNote: 5.0.1
