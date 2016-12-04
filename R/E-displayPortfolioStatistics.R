@@ -24,61 +24,16 @@ displayPortfolioStatistics <- function(
 , riskFreeRate = 0
 ){
 
-benchmark <- benchmark[index(linearReturnMatrix)] #filter for dates so that there are no NAs
-  
-portfolioMatrix <-
-  createRealizedPortfolioTimeSeries(linearReturnMatrix =  linearReturnMatrix
-                                             , weightMatrix = weightMatrix
-                                             , includeConstituents = includeConstituents
-                                             , benchmark = benchmark
-                                             , portfolioName = portfolioName
-                                             , benchmarkName = benchmarkName
-                                             )
-  
-scalingFactor <-
-switch(xts::periodicity(portfolioMatrix)$scale
-        , daily = 252
-        , weekly = 52
-        , monthly = 12
-        , quarterly = 4
-        , yearly = 1
-      )
-
-portfolioStatistics <- 
-rbind(
-  PerformanceAnalytics::Return.annualized(R = portfolioMatrix
-                                        , scale = scalingFactor
-                                        )
-, PerformanceAnalytics::StdDev.annualized(x = portfolioMatrix
-                                          , scale = scalingFactor
-                                        )
-, PerformanceAnalytics::SemiDeviation(R = portfolioMatrix)*sqrt(scalingFactor)
-
-, PerformanceAnalytics::SharpeRatio.annualized(R = portfolioMatrix, scale = scalingFactor, Rf = riskFreeRate)
-, PerformanceAnalytics::AdjustedSharpeRatio(R = portfolioMatrix, scale = scalingFactor, Rf = riskFreeRate)
-, PerformanceAnalytics::AverageDrawdown(R = portfolioMatrix)
-, PerformanceAnalytics::AverageRecovery(R = portfolioMatrix)
-, `VaR 95` = PerformanceAnalytics::VaR(R = portfolioMatrix, p = 0.95)
-, `VaR 99` = PerformanceAnalytics::VaR(R = portfolioMatrix, p = 0.99)
-, `ETL 95` = PerformanceAnalytics::ETL(R = portfolioMatrix, p = 0.95)
-, `ETL 99` = PerformanceAnalytics::ETL(R = portfolioMatrix, p = 0.99)
-, `Worst Loss` = t(data.frame(apply(portfolioMatrix,2,function(x){x<-x[!is.na(x)]; return(min(x))})))
-, PerformanceAnalytics::skewness(x = portfolioMatrix)
-, PerformanceAnalytics::kurtosis(x = portfolioMatrix)
-)
 
 
-if(!is.na(unique(benchmark)[1])){
-  portfolioStatistics <- 
-    rbind(portfolioStatistics
-      , `Information Ratio` =  sapply(portfolioMatrix
-                , function(x){
-                           PerformanceAnalytics::InformationRatio(Ra = x, Rb = portfolioMatrix[ , benchmarkName], scale = scalingFactor)
-                            }
-                            )
-    )
-}
-
-print(portfolioStatistics)
+  print(computePortfolioStatistics(  linearReturnMatrix = linearReturnMatrix
+                                     , weightMatrix = weightMatrix
+                                     , includeConstituents = includeConstituents
+                                     , benchmark = benchmark
+                                     , portfolioName = portfolioName
+                                     , benchmarkName = benchmarkName
+                                     , riskFreeRate = riskFreeRate
+  )
+  )
 
 }
