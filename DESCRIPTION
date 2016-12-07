@@ -7,7 +7,7 @@ Maintainer: Erol Biceroglu <erol.biceroglu@alumni.utoronto.ca>
 Description: Convenience functions for xts, PerformanceAnalytics, quantmod, and
     other packages
 Depends:
-    xts
+    xts, PerformanceAnalytics
 Imports:
     zoo,
     xts,
